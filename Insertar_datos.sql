@@ -80,6 +80,21 @@ INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (1, 1, 1);
 INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (2, 2, 1);
 INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (3, 3, 1);
 
+INSERT INTO subs (name, min_age, max_age, user_created)
+VALUES
+    ('SUB 13', 13, 13, 1),
+    ('SUB 14', 14, 14, 1),
+    ('SUB 15', 15, 15, 1),
+    ('SUB 16', 16, 16, 1),
+    ('SUB 17', 17, 17, 1),
+    ('SUB 18', 18, 18, 1),
+    ('SUB 19',19, 19, 1),
+    ('SUB 20', 20, 20, 1),
+    ('SUB 21', 21, 21, 1),
+    ('SUB 22', 22, 22, 1),
+    ('SUB 23', 23, 23, 1),
+    ('ADULTOS', 24, 100, 1);
+
 SELECT * FROM games;
 SELECT * FROM roles;
 SELECT * FROM games;
@@ -92,3 +107,10 @@ SELECT * FROM teams_genders;
 SELECT * FROM teams_ages;
 
 UPDATE users SET deleted = null;
+
+INSERT INTO type_player (name, user_created) VALUES ('Titular player', 1), ('Substitute player', 1);
+
+INSERT INTO clubs_teams (club_id, team_id, user_created) VALUES (1, 1, 1);
+INSERT INTO teams_subs (team_id, sub_id, user_created) VALUES (1, 10, 1);
+INSERT INTO teams_genders (team_id, gender_id, user_created) VALUES (1, 1, 1);
+

@@ -21,8 +21,7 @@ CREATE TABLE users (
 CREATE TABLE teams (
     id INT UNSIGNED AUTO_INCREMENT,
     name LONGTEXT NOT NULL,
-    coach LONGTEXT COLLATE utf8mb4_bin NOT NULL
-        CHECK(JSON_VALID(coach)),
+    coach LONGTEXT NOT NULL,
     user_created INT UNSIGNED NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     user_deleted INT UNSIGNED NULL,
@@ -30,7 +29,7 @@ CREATE TABLE teams (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE users_teams (
+/*CREATE TABLE users_teams (
     id INT UNSIGNED AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
     team_id INT UNSIGNED NOT NULL,
@@ -40,9 +39,9 @@ CREATE TABLE users_teams (
     deleted TIMESTAMP NULL,
     PRIMARY KEY (id),
     UNIQUE KEY (user_id, team_id)
-);
+);*/
 
-CREATE TABLE roles (
+/*CREATE TABLE roles (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
@@ -52,9 +51,9 @@ CREATE TABLE roles (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
-CREATE TABLE users_teams_roles (
+/*CREATE TABLE users_teams_roles (
     id INT UNSIGNED AUTO_INCREMENT,
     role_id INT UNSIGNED NOT NULL,
     user_team_id INT UNSIGNED NOT NULL,
@@ -63,7 +62,7 @@ CREATE TABLE users_teams_roles (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
 CREATE TABLE games (
     id INT UNSIGNED AUTO_INCREMENT,
@@ -163,7 +162,7 @@ CREATE TABLE users_players (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE ages (
+/*CREATE TABLE ages (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     active BIT DEFAULT b'1' NOT NULL,
@@ -174,7 +173,7 @@ CREATE TABLE ages (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
 CREATE TABLE genders (
     id INT UNSIGNED AUTO_INCREMENT,
@@ -187,7 +186,7 @@ CREATE TABLE genders (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE actions (
+/*CREATE TABLE actions (
     id INT UNSIGNED AUTO_INCREMENT,
     module_id INT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -198,9 +197,9 @@ CREATE TABLE actions (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
-CREATE TABLE roles_actions (
+/*CREATE TABLE roles_actions (
     id INT UNSIGNED AUTO_INCREMENT,
     role_id INT UNSIGNED NOT NULL,
     action_id INT UNSIGNED NOT NULL,
@@ -210,7 +209,7 @@ CREATE TABLE roles_actions (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
 CREATE TABLE players_genders (
     id INT UNSIGNED AUTO_INCREMENT,
@@ -223,7 +222,7 @@ CREATE TABLE players_genders (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE teams_gender (
+/*CREATE TABLE teams_gender (
     id INT UNSIGNED AUTO_INCREMENT,
     team_id INT UNSIGNED NOT NULL,
     gender_id INT UNSIGNED NOT NULL,
@@ -232,9 +231,9 @@ CREATE TABLE teams_gender (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY (id)
-);
+);*/
 
-CREATE TABLE teams_ages (
+/*CREATE TABLE teams_ages (
     id INT UNSIGNED AUTO_INCREMENT,
     team_id INT UNSIGNED NOT NULL,
     age_id INT UNSIGNED NOT NULL,
@@ -243,7 +242,7 @@ CREATE TABLE teams_ages (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY (id)
-);
+);*/
 
 CREATE TABLE clubs (
     id INT UNSIGNED AUTO_INCREMENT,
@@ -296,4 +295,96 @@ CREATE TABLE users_referees (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
+);
+
+/*CREATE TABLE team_titular_players(
+    id INT UNSIGNED AUTO_INCREMENT,
+    team_id INT UNSIGNED NOT NULL,
+    player_id INT UNSIGNED NOT NULL,
+    position_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);*/
+
+/*CREATE TABLE team_substitute_players(
+    id INT UNSIGNED AUTO_INCREMENT,
+    team_id INT UNSIGNED NOT NULL,
+    player_id INT UNSIGNED NOT NULL,
+    position_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);*/
+
+CREATE TABLE clubs_teams (
+    id INT UNSIGNED AUTO_INCREMENT,
+    club_id INT UNSIGNED NOT NULL,
+    team_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE teams_players (
+    id INT UNSIGNED AUTO_INCREMENT,
+    team_id INT UNSIGNED NOT NULL,
+    player_id INT UNSIGNED NOT NULL,
+    position_id INT UNSIGNED,
+    type_player_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE subs (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(50)  NOT NULL,
+    min_age  INT UNSIGNED NOT NULL,
+    max_age  INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE type_player (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(50)  NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE teams_genders (
+    id INT UNSIGNED AUTO_INCREMENT,
+    team_id INT UNSIGNED NOT NULL,
+    gender_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE teams_subs (
+    id INT UNSIGNED AUTO_INCREMENT,
+    team_id INT UNSIGNED NOT NULL,
+    sub_id INT UNSIGNED NOT NULL,
+     user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
 );

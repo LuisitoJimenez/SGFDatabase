@@ -334,3 +334,92 @@ SELECT
                      INNER JOIN referees_genders refereeGender ON referee.id = refereeGender.referee_id AND refereeGender.deleted IS NULL
                      INNER JOIN genders gender ON refereeGender.gender_id = gender.id
             WHERE user.deleted IS NULL AND referee.deleted IS NULL;
+
+SELECT
+                            club.id,
+                            JSON_UNQUOTE(JSON_EXTRACT(club.logo, '$[0].name')) AS logo,
+                            club.name,
+                            club.social_networks AS socialNetworks,
+                            club.email,
+                            club.phone
+                     FROM clubs club
+                     WHERE club.deleted IS NULL;
+
+
+-- Consulta para obtener los jugadores titulares de un equipo
+SELECT
+    player.id AS playerId,
+    user.name AS userName,
+    team.id AS teamId,
+    team.name AS teamName
+FROM users user
+    INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+    INNER JOIN players player ON userPlayer.player_id = player.id
+    INNER JOIN teams_players teamPlayer ON player.id = teamPlayer.player_id AND teamPlayer.deleted IS NULL
+    INNER JOIN teams team ON teamPlayer.team_id = team.id
+WHERE user.deleted IS NULL AND player.deleted IS NULL AND team.id = :pTeamId AND teamPlayer.deleted IS NULL AND teamPlayer.type_player_id = 1;
+
+-- Consulta para obtener el equipo por id, asi como el genero y el sub al que pertenece
+SELECT
+    team.id AS teamId,
+    team.name AS name,
+    team.coach AS coach,
+    gender.id AS genderId,
+    sub.id AS subId,
+    club.id AS clubId
+FROM teams team
+    INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
+    INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+    INNER JOIN genders gender ON teamGender.gender_id = gender.id
+    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN clubs club ON clubTeam.club_id = club.id
+WHERE team.deleted IS NULL AND team.id = :pTeamId;
+
+-- Consulta para obtener la lista de equipos de un club
+SELECT
+    team.id AS teamId,
+    team.name AS name,
+    team.coach AS coach,
+    gender.id AS genderId,
+    sub.id AS subId,
+    club.id AS clubId
+FROM teams team
+    INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
+    INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+    INNER JOIN genders gender ON teamGender.gender_id = gender.id
+    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN clubs club ON clubTeam.club_id = club.id
+WHERE team.deleted IS NULL;
+
+SELECT
+                team.id,
+                team.name,
+                team.coach,
+                gender.id AS genderId,
+                sub.id AS subId,
+                club.id AS clubId
+            FROM teams team
+                INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
+                INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+                INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+                INNER JOIN genders gender ON teamGender.gender_id = gender.id
+                INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+                INNER JOIN clubs club ON clubTeam.club_id = club.id
+            WHERE team.deleted IS NULL AND team.id = :pTeamId
+
+
+-- Consulta para buscar un equipo por id y que no este eliminado en la tabla club_teams
+SELECT
+    team.id AS teamId,
+    team.name AS name,
+    club.id AS clubId,
+    club.name AS clubName
+FROM teams team
+    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN clubs club ON clubTeam.club_id = club.id
+WHERE team.deleted IS NULL AND team.id = :pTeamId;
+
+
+SELECT * FROM teams_subs;
