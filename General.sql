@@ -422,3 +422,4 @@ FROM teams team
 WHERE team.deleted IS NULL AND team.id = :pTeamId;
 
 
+SELECT * FROM teams_subs;
