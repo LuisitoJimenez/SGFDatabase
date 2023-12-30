@@ -67,9 +67,12 @@ CREATE TABLE teams (
 CREATE TABLE games (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    referee LONGTEXT COLLATE utf8mb4_bin NOT NULL
-        CHECK(JSON_VALID(referee)),
-    play_date TIMESTAMP NOT NULL,
+    -- referee LONGTEXT COLLATE utf8mb4_bin NOT NULL
+        -- CHECK(JSON_VALID(referee)),
+    -- play_date TIMESTAMP NOT NULL,
+    game_time TIME NOT NULL,
+    game_date DATE NOT NULL,
+    field VARCHAR(50),
     user_created INT UNSIGNED NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     user_deleted INT UNSIGNED NULL,
@@ -383,6 +386,40 @@ CREATE TABLE teams_subs (
     team_id INT UNSIGNED NOT NULL,
     sub_id INT UNSIGNED NOT NULL,
      user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE game_gender (
+    id INT UNSIGNED AUTO_INCREMENT,
+    game_id INT UNSIGNED NOT NULL,
+    gender_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE game_sub (
+    id INT UNSIGNED AUTO_INCREMENT,
+    game_id INT UNSIGNED NOT NULL,
+    sub_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    user_deleted INT UNSIGNED NULL,
+    deleted TIMESTAMP NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE games_referees (
+    id INT UNSIGNED AUTO_INCREMENT,
+    game_id INT UNSIGNED NOT NULL,
+    referee_id INT UNSIGNED NOT NULL,
+    -- type_referee_id INT UNSIGNED NOT NULL,
+    user_created INT UNSIGNED NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
