@@ -423,3 +423,47 @@ WHERE team.deleted IS NULL AND team.id = :pTeamId;
 
 
 SELECT * FROM teams_subs;
+
+
+SELECT
+        game.id,
+        game.name,
+        team.id AS teamId,
+        team.name AS teamName,
+        team.coach
+    FROM games game
+        LEFT JOIN games_teams gameTeam ON game.id = gameTeam.game_id
+        LEFT JOIN teams team ON gameTeam.team_id = team.id
+    WHERE game.id = :pGameId AND gameTeam.deleted IS NULL;
+
+SELECT
+    game.id,
+    game.name,
+    game.game_date,
+    game.game_time,
+    game.field,
+    sub.id AS subId,
+    gender.id AS genderId,
+    referee.id AS refereeId
+FROM games game
+    INNER JOIN games_subs gameSub ON game.id = gameSub.game_id AND gameSub.deleted IS NULL
+    INNER JOIN subs sub ON gameSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN games_genders gameGender ON game.id = gameGender.game_id AND gameGender.deleted IS NULL
+    INNER JOIN genders gender ON gameGender.gender_id = gender.id AND gender.deleted IS NULL
+    INNER JOIN games_referees gameReferee ON game.id = gameReferee.game_id AND gameReferee.deleted IS NULL
+    INNER JOIN referees referee ON gameReferee.referee_id = referee.id AND referee.deleted IS NULL
+WHERE game.deleted IS NULL AND game.id = :pGameId;
+
+
+            SELECT
+                game.id,
+                game.name,
+                game.game_date,
+                game.game_time,
+                team.id AS teamId,
+                team.name AS teamName,
+                team.coach
+            FROM games game
+                LEFT JOIN games_teams gameTeam ON game.id = gameTeam.game_id
+                LEFT JOIN teams team ON gameTeam.team_id = team.id
+            WHERE game.id = :pGameId AND gameTeam.deleted IS NULL;

@@ -418,7 +418,7 @@ CREATE TABLE games_referees (
     id INT UNSIGNED AUTO_INCREMENT,
     game_id INT UNSIGNED NOT NULL,
     referee_id INT UNSIGNED NOT NULL,
-    type_referee_id INT UNSIGNED NOT NULL,
+    -- type_referee_id INT UNSIGNED NOT NULL,
     user_created INT UNSIGNED NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     user_deleted INT UNSIGNED NULL,
