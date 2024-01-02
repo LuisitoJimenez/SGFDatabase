@@ -425,3 +425,4 @@ CREATE TABLE games_referees (
     deleted TIMESTAMP NULL,
     PRIMARY KEY (id)
 );
+
