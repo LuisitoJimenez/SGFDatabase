@@ -10,6 +10,11 @@ ALTER TABLE players ADD COLUMN weight FLOAT UNSIGNED NOT NULL;
 ALTER TABLE players ADD COLUMN height FLOAT UNSIGNED NOT NULL;
 ALTER TABLE players ADD COLUMN nationality VARCHAR(50) NOT NULL;
 
+ALTER TABLE field ADD COLUMN email VARCHAR (50) NOT NULL
+        CHECK (`email` REGEXP '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$');
+
+ALTER TABLE field ADD COLUMN address LONGTEXT COLLATE utf8mb4_bin NOT NULL CHECK (JSON_VALID(address));
+
 ALTER TABLE users DROP COLUMN address;
 ALTER TABLE users DROP COLUMN birthday;
 

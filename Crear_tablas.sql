@@ -72,7 +72,7 @@ CREATE TABLE games (
     -- play_date TIMESTAMP NOT NULL,
     game_time TIME NOT NULL,
     game_date DATE NOT NULL,
-    field VARCHAR(50),
+    -- field VARCHAR(50),
     user_created INT UNSIGNED NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
     user_deleted INT UNSIGNED NULL,
@@ -91,7 +91,7 @@ CREATE TABLE games_teams(
     PRIMARY KEY(id)
 );
 
-CREATE TABLE tournaments (
+/*CREATE TABLE tournaments (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     start_date TIMESTAMP NOT NULL,
@@ -101,9 +101,9 @@ CREATE TABLE tournaments (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
-CREATE TABLE tournaments_games (
+CREATE TABLE tournament_game (
     id INT UNSIGNED  AUTO_INCREMENT,
     tournament_id INT UNSIGNED NOT NULL,
     game_id INT UNSIGNED NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE tournaments_games (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE statistics (
+/*CREATE TABLE statistics (
     id INT UNSIGNED AUTO_INCREMENT,
     goals INT UNSIGNED NOT NULL,
     yellow_cards INT UNSIGNED NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE statistics (
     user_deleted INT UNSIGNED NULL,
     deleted TIMESTAMP NULL,
     PRIMARY KEY(id)
-);
+);*/
 
 CREATE TABLE statistics_games (
     id INT UNSIGNED AUTO_INCREMENT,
@@ -426,3 +426,152 @@ CREATE TABLE games_referees (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE tournament (
+    id INT UNSIGNED AUTO_INCREMENT,
+    logo VARCHAR (200),
+    name VARCHAR (50) NOT NULL,
+    description VARCHAR (255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE tournament_matchday (
+    id INT UNSIGNED AUTO_INCREMENT,
+    tournament_id INT UNSIGNED NOT NULL,
+    matchday_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE matchday (
+    id INT UNSIGNED NOT NULL,
+    name VARCHAR (50) NOT NULL,
+    description VARCHAR (255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE matchday_game (
+    id INT UNSIGNED NOT NULL,
+    matchday_id INT UNSIGNED NOT NULL,
+    game_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE team_statistic (
+    id INT UNSIGNED NOT NULL,
+    team_id INT UNSIGNED NOT NULL,
+    statistic_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE statistic (
+    id INT UNSIGNED NOT NULL,
+    red_cards INT UNSIGNED,
+    yellow_cards INT UNSIGNED,
+    goals INT UNSIGNED,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE field (
+    id INT UNSIGNED NOT NULL,
+    logo VARCHAR (200),
+    name VARCHAR (50) NOT NULL,
+    phone VARCHAR (20) NOT NULL,
+    email VARCHAR (50) NOT NULL
+        CHECK (`email` REGEXP '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$'),
+    address LONGTEXT COLLATE utf8mb4_bin NOT NULL CHECK (JSON_VALID(address)),
+    capacity INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE field_game (
+    id INT UNSIGNED NOT NULL,
+    field_id INT UNSIGNED NOT NULL,
+    game_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE tournament_sub (
+    id INT UNSIGNED NOT NULL,
+    tournament_id INT UNSIGNED NOT NULL,
+    sub_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE tournament_gender(
+    id INT UNSIGNED NOT NULL,
+    tournament_id INT UNSIGNED NOT NULL,
+    gender_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE game_team_statistic (
+    id INT UNSIGNED NOT NULL,
+    game_id INT UNSIGNED NOT NULL,
+    team_statistic_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    modified_at TIMESTAMP NULL,
+    modified_by INT UNSIGNED NULL,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT UNSIGNED NULL,
+    PRIMARY KEY (id)
+);
