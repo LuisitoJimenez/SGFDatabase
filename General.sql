@@ -1,8 +1,8 @@
-ALTER TABLE players
+ALTER TABLE player
     ADD COLUMN player_number INT UNSIGNED NULL;
-ALTER TABLE teams
+ALTER TABLE team
     ADD COLUMN gender_category VARCHAR(50) NOT NULL;
-ALTER TABLE teams
+ALTER TABLE team
     ADD COLUMN age_category VARCHAR(50) NOT NULL;
 ALTER TABLE ages
     ADD COLUMN min_age INT UNSIGNED NOT NULL;
@@ -10,86 +10,86 @@ ALTER TABLE ages
     ADD COLUMN max_age INT UNSIGNED NOT NULL;
 ALTER TABLE roles
     ADD COLUMN description VARCHAR(255) NOT NULL;
-ALTER TABLE players
+ALTER TABLE player
     DROP COLUMN player_number;
-ALTER TABLE teams
+ALTER TABLE team
     DROP COLUMN gender_category;
-ALTER TABLE teams
+ALTER TABLE team
     DROP COLUMN age_category;
-ALTER TABLE games
+ALTER TABLE game
     DROP COLUMN gender_category;
-ALTER TABLE games
+ALTER TABLE game
     DROP COLUMN age_category;
 ALTER TABLE tournaments
     DROP COLUMN gender_category;
 ALTER TABLE tournaments
     DROP COLUMN age_category;
-ALTER TABLE games RENAME COLUMN play_date TO play_date;
+ALTER TABLE game RENAME COLUMN play_date TO play_date;
 ALTER TABLE gender RENAME TO genders;
 ALTER TABLE age RENAME TO ages;
-ALTER TABLE users
+ALTER TABLE user
     DROP COLUMN gender;
 
-ALTER TABLE users
+ALTER TABLE user
     ADD COLUMN address VARCHAR(255) NULL;
 
-UPDATE teams
-SET teams.gender_category = "Femenil"
+UPDATE team
+SET team.gender_category = "Femenil"
 WHERE id = 16;
-UPDATE teams
-SET teams.gender_category = "Varonil"
+UPDATE team
+SET team.gender_category = "Varonil"
 WHERE id = 15;
-UPDATE teams
-SET teams.age_category = "Benjamine"
+UPDATE team
+SET team.age_category = "Benjamine"
 WHERE id = 16;
-UPDATE teams
-SET teams.age_category = "Alevine"
+UPDATE team
+SET team.age_category = "Alevine"
 WHERE id = 14;
-UPDATE users
+UPDATE user
 SET deleted = null;
-UPDATE users
+UPDATE user
 SET gender = "Masculino"
 WHERE gender = "Hombre";
-UPDATE users
+UPDATE user
 SET gender = "Femenino"
 WHERE gender = "Mujer";
-UPDATE players
+UPDATE player
 SET player_number = 1
 WHERE id = 1;
-UPDATE players
+UPDATE player
 SET player_number = null
 WHERE id = 1;
 
 DELETE
-FROM users
+FROM user
 WHERE id = 9;
 DELETE
-FROM games_teams;
+FROM game_team;
 
-DROP TABLE users;
+DROP TABLE user;
 DROP TABLE users_genders;
 
 SELECT *
 FROM ages;
 SELECT *
-FROM players;
+FROM player;
 SELECT *
-FROM games;
+FROM game;
 SELECT *
 FROM roles;
 SELECT *
-FROM teams;
+FROM team;
 SELECT *
 FROM tournaments;
 SELECT *
-FROM games_teams;
+FROM game_team;
 SELECT *
-FROM users_players;
+FROM user_player;
 SELECT *
-FROM users;
+FROM user;
 
 SELECT *
-FROM genders;
+FROM gender;
 
 SELECT game.id,
        game.name,
@@ -98,9 +98,9 @@ SELECT game.id,
        team.id   AS teamId,
        team.name AS teamName,
        team.coach
-FROM games game
-         LEFT JOIN games_teams gameTeam ON game.id = gameTeam.game_id
-         LEFT JOIN teams team ON gameTeam.team_id = team.id
+FROM game game
+         LEFT JOIN game_team gameTeam ON game.id = gameTeam.game_id
+         LEFT JOIN team team ON gameTeam.team_id = team.id
 WHERE game.id = :pGameId
   AND gameTeam.deleted IS NULL;
 
@@ -111,9 +111,9 @@ SELECT user.id,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
-         LEFT JOIN users_players userPlayer ON user.id = userPlayer.user_id
-         LEFT JOIN players player ON userPlayer.player_id = player.id
+FROM user user
+         LEFT JOIN user_player userPlayer ON user.id = userPlayer.user_id
+         LEFT JOIN player player ON userPlayer.player_id = player.id
 WHERE player.id = :pPlayer
   AND userPlayer.deleted IS NULL;
 
@@ -122,9 +122,9 @@ SELECT user.id,
        user.birthday,
        user.email,
        gender.name
-FROM users user
+FROM user user
          LEFT JOIN users_genders userGender ON user.id = userGender.user_id
-         LEFT JOIN genders gender ON userGender.gender_id = gender.id
+         LEFT JOIN gender gender ON userGender.gender_id = gender.id
 WHERE userGender.deleted IS NULL;
 
 SELECT user.id,
@@ -135,11 +135,11 @@ SELECT user.id,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
+FROM user user
          LEFT JOIN users_genders userGender ON user.id = userGender.user_id
-         LEFT JOIN genders gender ON userGender.user_id = user.id
-         LEFT JOIN users_players userPlayer ON user.id = userPlayer.user_id
-         LEFT JOIN players player ON userPlayer.player_id = player.id
+         LEFT JOIN gender gender ON userGender.user_id = user.id
+         LEFT JOIN user_player userPlayer ON user.id = userPlayer.user_id
+         LEFT JOIN player player ON userPlayer.player_id = player.id
 WHERE userPlayer.deleted IS NULL
 ORDER BY user.id ASC;
 
@@ -149,9 +149,9 @@ SELECT user.id,
        user.email,
        user.address,
        gender.name AS gender
-FROM users user
+FROM user user
          LEFT JOIN users_genders userGender ON user.id = userGender.user_id
-         LEFT JOIN genders gender ON userGender.gender_id = gender.id
+         LEFT JOIN gender gender ON userGender.gender_id = gender.id
 WHERE userGender.deleted IS NULL
   AND user.deleted IS NULL;
 
@@ -165,12 +165,12 @@ SELECT user.id,
        user.name,
        user.user_created,
        user.user_deleted
-FROM users user
+FROM user user
 WHERE user.email = ?
   AND user.deleted IS NULL;
 
 SELECT CASE WHEN COUNT(user.email) > 0 THEN 'false' ELSE 'true' END AS available
-FROM users user
+FROM user user
 WHERE user.email = :pEmail
   AND user.deleted IS NULL;
 
@@ -180,9 +180,9 @@ SELECT user.id,
        user.email,
        user.address,
        gender.name AS gender
-FROM users user
+FROM user user
          LEFT JOIN users_genders userGender ON user.id = userGender.user_id
-         LEFT JOIN genders gender ON userGender.gender_id = gender.id
+         LEFT JOIN gender gender ON userGender.gender_id = gender.id
 WHERE user.id = :pUserId
   AND userGender.deleted IS NULL
   AND user.deleted IS NULL;
@@ -194,11 +194,11 @@ SELECT user.id,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
+FROM user user
          INNER JOIN users_genders userGender ON user.id = userGender.user_id
-         INNER JOIN genders gender ON userGender.user_id = user.id
-         INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id
-         INNER JOIN players player ON userPlayer.player_id = player.id
+         INNER JOIN gender gender ON userGender.user_id = user.id
+         INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id
+         INNER JOIN player player ON userPlayer.player_id = player.id
 WHERE userPlayer.deleted IS NULL
 ORDER BY user.id ASC;
 
@@ -209,11 +209,11 @@ SELECT user.id,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
+FROM user user
          INNER JOIN users_genders userGender ON user.id = userGender.user_id
-         INNER JOIN genders gender ON userGender.gender_id = gender.id
-         INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id
-         INNER JOIN players player ON userPlayer.player_id = player.id
+         INNER JOIN gender gender ON userGender.gender_id = gender.id
+         INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id
+         INNER JOIN player player ON userPlayer.player_id = player.id
 WHERE user.deleted IS NULL
   AND userPlayer.deleted IS NULL
   AND userGender.deleted IS NULL;
@@ -225,11 +225,11 @@ SELECT user.id,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
+FROM user user
          INNER JOIN users_genders userGender ON user.id = userGender.user_id AND userGender.deleted IS NULL
-         INNER JOIN genders gender ON userGender.gender_id = gender.id
-         INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
-         INNER JOIN players player ON userPlayer.player_id = player.id
+         INNER JOIN gender gender ON userGender.gender_id = gender.id
+         INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+         INNER JOIN player player ON userPlayer.player_id = player.id
 WHERE user.deleted IS NULL;
 
 SELECT player.id   AS playerId,
@@ -239,11 +239,11 @@ SELECT player.id   AS playerId,
        player.photo,
        player.identification,
        player.player_number
-FROM players player
-         INNER JOIN users_players userPlayer ON player.id = userPlayer.player_id AND userPlayer.deleted IS NULL
-         INNER JOIN users user ON userPlayer.user_id = user.id AND user.deleted IS NULL
+FROM player player
+         INNER JOIN user_player userPlayer ON player.id = userPlayer.player_id AND userPlayer.deleted IS NULL
+         INNER JOIN user user ON userPlayer.user_id = user.id AND user.deleted IS NULL
          INNER JOIN users_genders userGender ON user.id = userGender.user_id AND userGender.deleted IS NULL
-         INNER JOIN genders gender ON userGender.gender_id = gender.id AND gender.deleted IS NULL
+         INNER JOIN gender gender ON userGender.gender_id = gender.id AND gender.deleted IS NULL
 WHERE player.deleted IS NULL
   AND player.id = :pPlayerId;
 
@@ -256,26 +256,26 @@ SELECT user.id              AS userId,
        player.player_number AS playerNumber,
        player.photo,
        player.identification
-FROM users user
+FROM user user
          INNER JOIN users_genders userGender ON user.id = userGender.user_id AND userGender.deleted IS NULL
-         INNER JOIN genders gender ON userGender.gender_id = gender.id
-         INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
-         INNER JOIN players player ON userPlayer.player_id = player.id
+         INNER JOIN gender gender ON userGender.gender_id = gender.id
+         INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+         INNER JOIN player player ON userPlayer.player_id = player.id
 WHERE user.deleted IS NULL;
 
 SELECT *
 FROM ages;
 SELECT *
-FROM teams;
+FROM team;
 
 SELECT team.id,
        team.name,
        team.coach,
        gender.name AS gender,
        age.name    AS age
-FROM teams team
-         LEFT JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
-         LEFT JOIN genders gender ON teamGender.gender_id = gender.id
+FROM team team
+         LEFT JOIN team_gender teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+         LEFT JOIN gender gender ON teamGender.gender_id = gender.id
          LEFT JOIN teams_ages teamAge ON team.id = teamAge.team_id AND teamAge.deleted IS NULL
          LEFT JOIN ages age ON teamAge.age_id = age.id
 WHERE team.deleted IS NULL;
@@ -290,14 +290,14 @@ SELECT
        player.birthplace,
        player.weight,
        player.height
-FROM users user
-         INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
-         INNER JOIN players player ON userPlayer.player_id = player.id
-         INNER JOIN players_genders playerGender ON player.id = playerGender.player_id AND playerGender.deleted IS NULL
-         INNER JOIN genders gender ON playerGender.gender_id = gender.id
+FROM user user
+         INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+         INNER JOIN player player ON userPlayer.player_id = player.id
+         INNER JOIN player_gender playerGender ON player.id = playerGender.player_id AND playerGender.deleted IS NULL
+         INNER JOIN gender gender ON playerGender.gender_id = gender.id
 WHERE user.deleted IS NULL;
 
-SELECT * FROM users;
+SELECT * FROM user;
 
 
 SELECT
@@ -310,11 +310,11 @@ SELECT
                    player.birthday,
                    player.weight,
                    player.height
-            FROM users user
-                     INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
-                     INNER JOIN players player ON userPlayer.player_id = player.id
-                     INNER JOIN players_genders playerGender ON player.id = playerGender.player_id AND playerGender.deleted IS NULL
-                     INNER JOIN genders gender ON playerGender.gender_id = gender.id
+            FROM user user
+                     INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+                     INNER JOIN player player ON userPlayer.player_id = player.id
+                     INNER JOIN player_gender playerGender ON player.id = playerGender.player_id AND playerGender.deleted IS NULL
+                     INNER JOIN gender gender ON playerGender.gender_id = gender.id
             WHERE user.deleted IS NULL AND player.id = : pPlayerId;
 
  SELECT
@@ -328,11 +328,11 @@ SELECT
                    referee.birthday,
                    referee.weight,
                    referee.height
-            FROM users user
-                     INNER JOIN users_referees userReferee ON user.id = userReferee.user_id AND userReferee.deleted IS NULL
-                     INNER JOIN referees referee ON userReferee.referee_id = referee.id
-                     INNER JOIN referees_genders refereeGender ON referee.id = refereeGender.referee_id AND refereeGender.deleted IS NULL
-                     INNER JOIN genders gender ON refereeGender.gender_id = gender.id
+            FROM user user
+                     INNER JOIN user_referee userReferee ON user.id = userReferee.user_id AND userReferee.deleted IS NULL
+                     INNER JOIN referee referee ON userReferee.referee_id = referee.id
+                     INNER JOIN referee_gender refereeGender ON referee.id = refereeGender.referee_id AND refereeGender.deleted IS NULL
+                     INNER JOIN gender gender ON refereeGender.gender_id = gender.id
             WHERE user.deleted IS NULL AND referee.deleted IS NULL;
 
 SELECT
@@ -342,7 +342,7 @@ SELECT
                             club.social_networks AS socialNetworks,
                             club.email,
                             club.phone
-                     FROM clubs club
+                     FROM club club
                      WHERE club.deleted IS NULL;
 
 
@@ -352,11 +352,11 @@ SELECT
     user.name AS userName,
     team.id AS teamId,
     team.name AS teamName
-FROM users user
-    INNER JOIN users_players userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
-    INNER JOIN players player ON userPlayer.player_id = player.id
-    INNER JOIN teams_players teamPlayer ON player.id = teamPlayer.player_id AND teamPlayer.deleted IS NULL
-    INNER JOIN teams team ON teamPlayer.team_id = team.id
+FROM user user
+    INNER JOIN user_player userPlayer ON user.id = userPlayer.user_id AND userPlayer.deleted IS NULL
+    INNER JOIN player player ON userPlayer.player_id = player.id
+    INNER JOIN team_player teamPlayer ON player.id = teamPlayer.player_id AND teamPlayer.deleted IS NULL
+    INNER JOIN team team ON teamPlayer.team_id = team.id
 WHERE user.deleted IS NULL AND player.deleted IS NULL AND team.id = :pTeamId AND teamPlayer.deleted IS NULL AND teamPlayer.type_player_id = 1;
 
 -- Consulta para obtener el equipo por id, asi como el genero y el sub al que pertenece
@@ -367,13 +367,13 @@ SELECT
     gender.id AS genderId,
     sub.id AS subId,
     club.id AS clubId
-FROM teams team
+FROM team team
     INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
-    INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
-    INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
-    INNER JOIN genders gender ON teamGender.gender_id = gender.id
-    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
-    INNER JOIN clubs club ON clubTeam.club_id = club.id
+    INNER JOIN sub sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN team_gender teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+    INNER JOIN gender gender ON teamGender.gender_id = gender.id
+    INNER JOIN club_team clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN club club ON clubTeam.club_id = club.id
 WHERE team.deleted IS NULL AND team.id = :pTeamId;
 
 -- Consulta para obtener la lista de equipos de un club
@@ -384,13 +384,13 @@ SELECT
     gender.id AS genderId,
     sub.id AS subId,
     club.id AS clubId
-FROM teams team
+FROM team team
     INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
-    INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
-    INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
-    INNER JOIN genders gender ON teamGender.gender_id = gender.id
-    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
-    INNER JOIN clubs club ON clubTeam.club_id = club.id
+    INNER JOIN sub sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN team_gender teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+    INNER JOIN gender gender ON teamGender.gender_id = gender.id
+    INNER JOIN club_team clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN club club ON clubTeam.club_id = club.id
 WHERE team.deleted IS NULL;
 
 SELECT
@@ -400,13 +400,13 @@ SELECT
                 gender.id AS genderId,
                 sub.id AS subId,
                 club.id AS clubId
-            FROM teams team
+            FROM team team
                 INNER JOIN teams_subs teamSub ON team.id = teamSub.team_id AND teamSub.deleted IS NULL
-                INNER JOIN subs sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
-                INNER JOIN teams_genders teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
-                INNER JOIN genders gender ON teamGender.gender_id = gender.id
-                INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
-                INNER JOIN clubs club ON clubTeam.club_id = club.id
+                INNER JOIN sub sub ON teamSub.sub_id = sub.id AND sub.deleted IS NULL
+                INNER JOIN team_gender teamGender ON team.id = teamGender.team_id AND teamGender.deleted IS NULL
+                INNER JOIN gender gender ON teamGender.gender_id = gender.id
+                INNER JOIN club_team clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+                INNER JOIN club club ON clubTeam.club_id = club.id
             WHERE team.deleted IS NULL AND team.id = :pTeamId
 
 
@@ -416,9 +416,9 @@ SELECT
     team.name AS name,
     club.id AS clubId,
     club.name AS clubName
-FROM teams team
-    INNER JOIN clubs_teams clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
-    INNER JOIN clubs club ON clubTeam.club_id = club.id
+FROM team team
+    INNER JOIN club_team clubTeam ON team.id = clubTeam.team_id AND clubTeam.deleted IS NULL
+    INNER JOIN club club ON clubTeam.club_id = club.id
 WHERE team.deleted IS NULL AND team.id = :pTeamId;
 
 
@@ -431,9 +431,9 @@ SELECT
         team.id AS teamId,
         team.name AS teamName,
         team.coach
-    FROM games game
-        LEFT JOIN games_teams gameTeam ON game.id = gameTeam.game_id
-        LEFT JOIN teams team ON gameTeam.team_id = team.id
+    FROM game game
+        LEFT JOIN game_team gameTeam ON game.id = gameTeam.game_id
+        LEFT JOIN team team ON gameTeam.team_id = team.id
     WHERE game.id = :pGameId AND gameTeam.deleted IS NULL;
 
 SELECT
@@ -445,15 +445,15 @@ SELECT
     sub.id AS subId,
     gender.id AS genderId,
     user.name AS referee
-FROM games game
-    INNER JOIN games_subs gameSub ON game.id = gameSub.game_id AND gameSub.deleted IS NULL
-    INNER JOIN subs sub ON gameSub.sub_id = sub.id AND sub.deleted IS NULL
-    INNER JOIN games_genders gameGender ON game.id = gameGender.game_id AND gameGender.deleted IS NULL
-    INNER JOIN genders gender ON gameGender.gender_id = gender.id AND gender.deleted IS NULL
-    INNER JOIN games_referees gameReferee ON game.id = gameReferee.game_id AND gameReferee.deleted IS NULL
-    INNER JOIN referees referee ON gameReferee.referee_id = referee.id AND referee.deleted IS NULL
-    INNER JOIN users_referees userReferee ON referee.id = userReferee.referee_id AND userReferee.deleted IS NULL
-    INNER JOIN users user ON userReferee.user_id = user.id AND user.deleted IS NULL
+FROM game game
+    INNER JOIN game_sub gameSub ON game.id = gameSub.game_id AND gameSub.deleted IS NULL
+    INNER JOIN sub sub ON gameSub.sub_id = sub.id AND sub.deleted IS NULL
+    INNER JOIN game_gender gameGender ON game.id = gameGender.game_id AND gameGender.deleted IS NULL
+    INNER JOIN gender gender ON gameGender.gender_id = gender.id AND gender.deleted IS NULL
+    INNER JOIN game_referee gameReferee ON game.id = gameReferee.game_id AND gameReferee.deleted IS NULL
+    INNER JOIN referee referee ON gameReferee.referee_id = referee.id AND referee.deleted IS NULL
+    INNER JOIN user_referee userReferee ON referee.id = userReferee.referee_id AND userReferee.deleted IS NULL
+    INNER JOIN user user ON userReferee.user_id = user.id AND user.deleted IS NULL
 WHERE game.deleted IS NULL AND game.id = :pGameId;
 
 
@@ -465,7 +465,7 @@ WHERE game.deleted IS NULL AND game.id = :pGameId;
                 team.id AS teamId,
                 team.name AS teamName,
                 team.coach
-            FROM games game
-                LEFT JOIN games_teams gameTeam ON game.id = gameTeam.game_id
-                LEFT JOIN teams team ON gameTeam.team_id = team.id
+            FROM game game
+                LEFT JOIN game_team gameTeam ON game.id = gameTeam.game_id
+                LEFT JOIN team team ON gameTeam.team_id = team.id
             WHERE game.id = :pGameId AND gameTeam.deleted IS NULL;
