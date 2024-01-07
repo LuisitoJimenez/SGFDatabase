@@ -242,7 +242,7 @@ CREATE TABLE type_player (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE teams_genders (
+CREATE TABLE team_gender (
     id INT UNSIGNED AUTO_INCREMENT,
     team_id INT UNSIGNED NOT NULL,
     gender_id INT UNSIGNED NOT NULL,
@@ -294,7 +294,7 @@ CREATE TABLE game_sub (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE games_referees (
+CREATE TABLE game_referee (
     id INT UNSIGNED AUTO_INCREMENT,
     game_id INT UNSIGNED NOT NULL,
     referee_id INT UNSIGNED NOT NULL,

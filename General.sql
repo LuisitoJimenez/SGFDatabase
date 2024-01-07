@@ -469,3 +469,14 @@ WHERE game.deleted IS NULL AND game.id = :pGameId;
                 LEFT JOIN game_team gameTeam ON game.id = gameTeam.game_id
                 LEFT JOIN team team ON gameTeam.team_id = team.id
             WHERE game.id = :pGameId AND gameTeam.deleted IS NULL;
+
+
+SELECT field.id,
+                   field.logo,
+                   field.name,
+                   field.address,
+                   field.phone,
+                   field.email,
+                   field.capacity
+            FROM field
+            WHERE field.deleted_at IS NULL;

@@ -51,10 +51,10 @@ VALUES
     ('Juveniles', 17, 19, 1),
     ('Senior',20, 100, 1);
 
-INSERT INTO genders (name, active, user_created)
+INSERT INTO gender (name, created_by)
 VALUES
-    ('Masculino', b'1', 1),
-    ('Femenino', b'1', 1);
+    ('Masculino', 1),
+    ('Femenino', 1);
 
 INSERT INTO users (name, email, birthday, gender, user_created)
 VALUES
@@ -80,7 +80,7 @@ INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (1, 1, 1);
 INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (2, 2, 1);
 INSERT INTO teams_ages(team_id, age_id, user_created) VALUES (3, 3, 1);
 
-INSERT INTO subs (name, min_age, max_age, user_created)
+INSERT INTO sub (name, min_age, max_age, created_by)
 VALUES
     ('SUB 13', 13, 13, 1),
     ('SUB 14', 14, 14, 1),
